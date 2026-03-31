@@ -1,0 +1,6 @@
+#FileLock
+#Tue Mar 31 11:02:13 CST 2026
+hostName=PanFasheng-Huawei14s.localdomain
+id=19d41d77649d8096d37a83a13cf072958031a1828fd
+method=file
+server=127.0.1.1\:26315
