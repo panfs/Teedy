@@ -61,6 +61,7 @@
     <org.apache.maven.plugins.maven-war-plugin.version>3.3.2</org.apache.maven.plugins.maven-war-plugin.version>
     <org.apache.maven.plugins.maven-surefire-plugin.version>3.0.0</org.apache.maven.plugins.maven-surefire-plugin.version>
     <org.eclipse.jetty.jetty-maven-plugin.version>11.0.20</org.eclipse.jetty.jetty-maven-plugin.version>
+    <org.apache.maven.plugins.maven-site-plugin.version>3.12.1</org.apache.maven.plugins.maven-site-plugin.version>
   </properties>
 
   <scm>
@@ -116,6 +117,16 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${org.eclipse.jetty.jetty-maven-plugin.version}</version>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>${org.apache.maven.plugins.maven-site-plugin.version}</version>
+        <configuration>
+          <outputDirectory>${project.build.directory}/site</outputDirectory>
+          <stagingDirectory>${project.build.directory}/site</stagingDirectory>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -124,6 +135,28 @@
     <module>docs-web-common</module>
     <module>docs-web</module>
   </modules>
+
+  <distributionManagement>
+    <site>
+      <id>local-site</id>
+      <url>file://${project.basedir}/target/site</url>
+    </site>
+  </distributionManagement>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.4.1</version>
+        <configuration>
+          <excludeReports>
+            <excludeReport>dependency-info</excludeReport>
+          </excludeReports>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <dependencyManagement>
     <dependencies>
