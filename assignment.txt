@@ -1,0 +1,54 @@
+Practice 7
+Deadline: Check onsite on or before week 9 lab.
+PMD is a source code analyzer or linter. It finds common programming flaws like unused variables, empty
+catch blocks, unnecessary object creation, and so forth.
+You could use it as standalone software, IDE plugin or Maven plugin. We'll use it as a Maven plugin in this
+practice.
+You could add maven-pmd-plugin in the <build> section of your pom.xml to run PMD in your Maven
+project. By default, PMD checks the project using a default ruleset In the maven PMD plugin configuration,
+you can also specify a custom ruleset file to use.
+
+<configuration> 
+  <rulesets> 
+    <ruleset>customize-rules.xml</ruleset> 
+  </rulesets>
+</configuration>
+
+The PMD maven plugin has several goals, including pmd:pmd, pmd:cpd, pmd:check, pmd:cpd-check, etc.
+Please check the documentation for details. You can also specify the goals to execute in the <executions>
+section of the plugin configuration.
+
+<executions> 
+  <execution> 
+    <goals> 
+      <goal>check</goal> 
+    </goals> 
+  </execution>
+</executions>
+
+By default, PMD is executed in the verify phase of the Maven lifecycle.
+
+After configuring the PMD plugin in the pom.xml, run:
+
+mvn clean -DskipTests install 
+
+
+Then, you will see pmd report (pmd.html) under docs-core/target/site, docs-web/target/site, and docs-web-common/target/site.
+Task
+In this practice, you'll define a customized PMD ruleset that includes only the following rules that we've covered in the lecture:
+Lines of code (LoC)
+Cyclomatic Complexity (CC)
+Weighted Methods per Class (WMC)
+Coupling Between Objects (CBO)
+Lack of Cohesion in Methods (LCOM)
+In addition, we want to include the PMD report in the site documentation of Teedy.
+Steps
+1. Check here to learn how to define a customized PMD ruleset.
+2. Check here for a list of available Java Rules. You need to pick the ones that correspond to or are closely
+related to the above 5 metrics, and add them into your customized ruleset.
+3. Configure pom.xml in Teedy to use the customized ruleset and generate the PMD report in the site
+documentation.
+4. Run mvn site.
+5. Open the generated target/site/index.html in your browser. The site should now include the PMD
+report. Note that, the PMD report should include problems detected by the customized ruleset that you
+defined in step 2.
