@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Teedy Practice 7 Metrics Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+  <description>Customized ruleset for LoC, CC, WMC, CBO, LCOM-related metrics.</description>
+
+  <rule ref="category/java/design.xml/NcssCount" />
+  <rule ref="category/java/design.xml/CyclomaticComplexity" />
+  <rule ref="category/java/design.xml/TooManyMethods" />
+  <rule ref="category/java/design.xml/CouplingBetweenObjects" />
+  <rule ref="category/java/design.xml/DataClass" />
+</ruleset>

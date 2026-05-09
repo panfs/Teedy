@@ -143,6 +143,153 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
+    
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>${org.apache.maven.plugins.maven-antrun-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>aggregate-module-sites-to-root</id>
+            <phase>site</phase>
+            <configuration>
+              <target name="aggregate-module-sites-to-root">
+                <property name="rootTargetDir" location="${project.basedir}/../target" />
+                <property name="rootSiteDir" location="${rootTargetDir}/site" />
+                
+                <available property="docsCoreSiteExists" file="${project.basedir}/../docs-core/target/site" type="dir" />
+                <available property="docsWebCommonSiteExists" file="${project.basedir}/../docs-web-common/target/site" type="dir" />
+                
+                <fail unless="docsCoreSiteExists" message="docs-core/target/site not found; run from reactor root: mvn site" />
+                <fail unless="docsWebCommonSiteExists" message="docs-web-common/target/site not found; run from reactor root: mvn site" />
+                
+                <mkdir dir="${rootSiteDir}/docs-core" />
+                <mkdir dir="${rootSiteDir}/docs-web-common" />
+                <mkdir dir="${rootSiteDir}/docs-web" />
+                
+                <copy todir="${rootSiteDir}/docs-core" overwrite="true">
+                  <fileset dir="${project.basedir}/../docs-core/target/site" />
+                </copy>
+                <copy todir="${rootSiteDir}/docs-web-common" overwrite="true">
+                  <fileset dir="${project.basedir}/../docs-web-common/target/site" />
+                </copy>
+                <copy todir="${rootSiteDir}/docs-web" overwrite="true">
+                  <fileset dir="${project.build.directory}/site" />
+                </copy>
+
+                <replaceregexp flags="g">
+                  <regexp pattern="(\./)?\.\./\.\./docs-core/target/site/docs-core/" />
+                  <substitution expression="docs-core/" />
+                  <fileset dir="${rootSiteDir}">
+                    <include name="*.html" />
+                  </fileset>
+                </replaceregexp>
+                <replaceregexp flags="g">
+                  <regexp pattern="(\./)?\.\./\.\./docs-web-common/target/site/docs-web-common/" />
+                  <substitution expression="docs-web-common/" />
+                  <fileset dir="${rootSiteDir}">
+                    <include name="*.html" />
+                  </fileset>
+                </replaceregexp>
+                <replaceregexp flags="g">
+                  <regexp pattern="(\./)?\.\./\.\./docs-web/target/site/docs-web/" />
+                  <substitution expression="docs-web/" />
+                  <fileset dir="${rootSiteDir}">
+                    <include name="*.html" />
+                  </fileset>
+                </replaceregexp>
+
+                <replaceregexp flags="g">
+                  <regexp pattern="(\./)?(\.\./){4}target/site/index\.html" />
+                  <substitution expression="../index.html" />
+                  <fileset dir="${rootSiteDir}">
+                    <include name="docs-*/**/*.html" />
+                  </fileset>
+                </replaceregexp>
+
+                <replaceregexp flags="g">
+                  <regexp pattern="\.\.\./index\.html" />
+                  <substitution expression="../index.html" />
+                  <fileset dir="${rootSiteDir}">
+                    <include name="docs-*/**/*.html" />
+                  </fileset>
+                </replaceregexp>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          
+          <execution>
+            <id>aggregate-module-build-outputs-to-root</id>
+            <phase>package</phase>
+            <configuration>
+              <target name="aggregate-module-build-outputs-to-root">
+                <property name="rootTargetDir" location="${project.basedir}/../target" />
+                <property name="rootBuildDir" location="${rootTargetDir}/reactor" />
+                <property name="rootArtifactsDir" location="${rootTargetDir}/artifacts" />
+                
+                <available property="docsCoreTargetExists" file="${project.basedir}/../docs-core/target" type="dir" />
+                <available property="docsWebCommonTargetExists" file="${project.basedir}/../docs-web-common/target" type="dir" />
+                
+                <fail unless="docsCoreTargetExists" message="docs-core/target not found; run from reactor root: mvn package" />
+                <fail unless="docsWebCommonTargetExists" message="docs-web-common/target not found; run from reactor root: mvn package" />
+                
+                <mkdir dir="${rootBuildDir}/docs-core" />
+                <mkdir dir="${rootBuildDir}/docs-web-common" />
+                <mkdir dir="${rootBuildDir}/docs-web" />
+                <mkdir dir="${rootArtifactsDir}" />
+                
+                <copy todir="${rootBuildDir}/docs-core" overwrite="true">
+                  <fileset dir="${project.basedir}/../docs-core/target">
+                    <include name="*.jar" />
+                    <include name="classes/**" />
+                    <include name="generated-sources/**" />
+                    <include name="generated-test-sources/**" />
+                    <include name="test-classes/**" />
+                  </fileset>
+                </copy>
+                <copy todir="${rootBuildDir}/docs-web-common" overwrite="true">
+                  <fileset dir="${project.basedir}/../docs-web-common/target">
+                    <include name="*.jar" />
+                    <include name="classes/**" />
+                    <include name="generated-sources/**" />
+                    <include name="generated-test-sources/**" />
+                    <include name="test-classes/**" />
+                  </fileset>
+                </copy>
+                <copy todir="${rootBuildDir}/docs-web" overwrite="true">
+                  <fileset dir="${project.build.directory}">
+                    <include name="*.war" />
+                    <include name="classes/**" />
+                    <include name="generated-sources/**" />
+                    <include name="generated-test-sources/**" />
+                    <include name="test-classes/**" />
+                  </fileset>
+                </copy>
+                
+                <copy todir="${rootArtifactsDir}" overwrite="true">
+                  <fileset dir="${project.basedir}/../docs-core/target">
+                    <include name="*.jar" />
+                  </fileset>
+                  <fileset dir="${project.basedir}/../docs-web-common/target">
+                    <include name="*.jar" />
+                  </fileset>
+                  <fileset dir="${project.build.directory}">
+                    <include name="*.war" />
+                  </fileset>
+                </copy>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <profiles>
