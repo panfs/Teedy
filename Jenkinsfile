@@ -32,11 +32,11 @@ pipeline {
             }
         }
 
-        stage('Javadoc') {
-            steps {
-                sh 'mvn javadoc:javadoc'
-            }
-        }
+        // stage('Javadoc') {
+        //     steps {
+        //         sh 'mvn javadoc:javadoc'
+        //     }
+        // }
 
         stage('Site') {
             steps {
